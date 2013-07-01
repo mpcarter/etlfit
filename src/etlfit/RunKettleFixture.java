@@ -14,19 +14,30 @@ public class RunKettleFixture extends DoFixture {
 	private String etlDirectory = "~/";
 	private int exitValue;
 
-	private int runProcess(ProcessBuilder pb) throws IOException, InterruptedException {
-		Process process = pb.start();
-		return process.waitFor();
+	private int runProcess(ProcessBuilder pb) {
+		int ev;
+		try {
+			Process process = pb.start();
+			ev = process.waitFor();
+		} catch (IOException ioex) {
+			ev = 1;
+		} catch (InterruptedException iex) {
+			ev = 1;
+		}
+		return ev;
 	}
 
 	public boolean runTransformationAtWith(String trnName, String trnPath, String[] trnParamArray) {
+		StringBuilder sb;
 		String trnParams;
 		for (String param : trnParamArray) {
-			
+			sb.append("/param:" + param + " ";	
 		}
+		trnParams = sb.toString();
 		
 		ProcessBuilder pb = new ProcessBuilder(kettleDirectory + trnExecutor, 
 				"/file:" + trnPath + trnName + ".ktr", 
+				trnParams, 
 				"/level:" + logLevel, 
 				"/log:" + logDirectory + trnName + ".log");
 		exitValue = runProcess(pb);
@@ -34,8 +45,8 @@ public class RunKettleFixture extends DoFixture {
 		return exitValue == 0;
 	}
 
-	public boolean runTransformationWith(String trnName, String[] trnParams) {
-
+	public boolean runTransformationWith(String trnName, String[] trnParamArray) {
+		return runTransformationAtWith(trnName, etlDirectory, trnParamArray);
 	}
 
 	public boolean runTransformationAt(String trnName, String trnPath) {
@@ -48,7 +59,7 @@ public class RunKettleFixture extends DoFixture {
 		return exitValue == 0;
 	}
 
-	public boolean runTransformation(String trnName) throws IOException, InterruptedException {
+	public boolean runTransformation(String trnName) {
 		return runTransformationAt(trnName, etlDirectory);
 	}
 
