@@ -11,6 +11,7 @@ public class RunKettleFixture extends DoFixture {
 	private String kettleDirectory = "/opt/pentaho/data-integration/";
 	private String trnExecutor = "pan.sh";
 	private String jobExecutor = "kitchen.sh";
+	private String etlDirectory = "~/";
 	private int exitValue;
 
 	private int runProcess(ProcessBuilder pb) throws IOException, InterruptedException {
@@ -18,33 +19,37 @@ public class RunKettleFixture extends DoFixture {
 		return process.waitFor();
 	}
 
-	public boolean runTransformationAtWith(String trnName, String trnPath, String[] trnParams) {
-
-	}
-
-	public boolean runTransformationWith(String trnPath, String[] trnParams) {
-
-	}
-
-	public boolean runTransformationAt(String trnName, String trnPath) {
+	public boolean runTransformationAtWith(String trnName, String trnPath, String[] trnParamArray) {
+		String trnParams;
+		for (String param : trnParamArray) {
+			
+		}
+		
 		ProcessBuilder pb = new ProcessBuilder(kettleDirectory + trnExecutor, 
-				"/file:" + trnPath + ".ktr", 
+				"/file:" + trnPath + trnName + ".ktr", 
 				"/level:" + logLevel, 
-				"/log:" + logDirectory + logFile + ".log");
+				"/log:" + logDirectory + trnName + ".log");
 		exitValue = runProcess(pb);
 
 		return exitValue == 0;
 	}
 
-	public boolean runTransformation(String trnPath) throws IOException, InterruptedException {
-		String trnName;
-		if (trnPath.lastIndexOf("/") >= 0) {
-			trnName = trnPath.substring(trnPath.lastIndexOf("/"));
-			trnPath = trnPath.substring(0, trnPath.lastIndexOf("/") + 1);
-		} else {
-			trnName = trnPath;
-			trnPath = "";
-		}
+	public boolean runTransformationWith(String trnName, String[] trnParams) {
+
+	}
+
+	public boolean runTransformationAt(String trnName, String trnPath) {
+		ProcessBuilder pb = new ProcessBuilder(kettleDirectory + trnExecutor, 
+				"/file:" + trnPath + trnName + ".ktr", 
+				"/level:" + logLevel, 
+				"/log:" + logDirectory + trnName + ".log");
+		exitValue = runProcess(pb);
+
+		return exitValue == 0;
+	}
+
+	public boolean runTransformation(String trnName) throws IOException, InterruptedException {
+		return runTransformationAt(trnName, etlDirectory);
 	}
 
 	public void setLogLevel(String level) {
@@ -55,6 +60,10 @@ public class RunKettleFixture extends DoFixture {
 		logDirectory = dir;
 	}
 
+	public void setEtlDirectory(String dir) {
+		etlDirectory = dir;
+	}
+	
 	public void setKettleDirectory(String dir) {
 		kettleDirectory = dir;
 	}
