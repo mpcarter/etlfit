@@ -28,18 +28,16 @@ public class RunKettleFixture extends DoFixture {
 	}
 
 	public boolean runTransformationAtWith(String trnName, String trnPath, String[] trnParamArray) {
-		StringBuilder sb;
-		String trnParams;
+		List<String> commands = new ArrayList<String>();
+		commands.add(kettleDirectory + trnExecutor);
+		commands.add("/file:" + trnPath + trnName + ".ktr"); 
 		for (String param : trnParamArray) {
-			sb.append("/param:" + param + " ";	
+			commands.add("/param:" + param);	
 		}
-		trnParams = sb.toString();
+		commands.add("/level:" + logLevel); 
+		commands.add("/log:" + logDirectory + trnName + ".log");
 		
-		ProcessBuilder pb = new ProcessBuilder(kettleDirectory + trnExecutor, 
-				"/file:" + trnPath + trnName + ".ktr", 
-				trnParams, 
-				"/level:" + logLevel, 
-				"/log:" + logDirectory + trnName + ".log");
+		ProcessBuilder pb = new ProcessBuilder(commands);
 		exitValue = runProcess(pb);
 
 		return exitValue == 0;
