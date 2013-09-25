@@ -1,0 +1,41 @@
+!path lib/*.jar
+
+!|etlfit.RunKettleFixture|
+
+#|show|log level|
+#|show|log directory|
+#|show|kettle directory|
+|set etl directory|/home/pentaho/|
+#|show|etl directory|
+
+| run transformation | hello-world |
+
+
+#|set log level|Minimal|
+#|set etl directory|/some/bogus/directory/|
+
+#|show|etl directory|
+#|check|log level|Minimal|
+
+#|run transformation|test-fixture|at|/home/pentaho/|
+#|show|exit value|
+
+#|run transformation|test-fixture|at|/home/pentaho/|with|P_PARAM_A=BOO!|
+
+#|run transformation|test-fixture|at|/home/pentaho/|with|P_PARAM_B=whoa|
+
+#|run transformation|test-fixture|at|/home/pentaho/|with|P_PARAM_A=aye,P_PARAM_B=carumba|
+
+#|set etl directory|/home/pentaho/|
+
+#|show|etl directory|
+
+#|run transformation|test-fixture|
+#|show|exit value|
+
+#|run transformation|test-fixture|with|P_PARAM_A=The-cake|
+
+#|run transformation|test-fixture|with|P_PARAM_B=is-a-lie|
+
+#|run transformation|test-fixture|with|P_PARAM_B=The-cake,P_PARAM_A=is-a-lie|
+
