@@ -1,4 +1,4 @@
-= Fitnesse startup options =
+# Fitnesse startup options #
 
 * p: port number __80__
 * d: working directory __.__
