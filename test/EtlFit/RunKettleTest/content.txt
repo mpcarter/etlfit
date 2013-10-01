@@ -1,9 +1,13 @@
 !path lib/*.jar
 
+This page is intended to demonstrate the features of [[!-EtlFit's-!][<EtlFit]] Run Kettle Fixture.
+
 This is needed to invoke the fixture.
 !|etlfit.RunKettleFixture|
 
-List default values
+!3 Preliminaries
+
+List of default values
 !| show | os name |
 | show | log level |
 | show | log directory |
@@ -14,6 +18,13 @@ List default values
 | show | etl directory |
 | show | java home |
 | show | kettle home |
+| show | read output |
+
+You are not required to show these. It is just here for reference. Many of them can be altered. In fact, you will probably want to set some of these in your Setup pages.
+
+You may need to alter some of them slightly for this page to run without error.
+For example, you need to change references to <user> to whatever your home directory is called.
+The paths on this page assume you are using !-GitHub-! on Windows. If you are running Linux (or Mac), you will probably need to change a lot of path names. 
 
 Set this value to your java install. This value is passed to the PENTAHO_JAVA_HOME environment variable.
 If not set, it will default to the JAVA_HOME environment variable.
@@ -22,11 +33,20 @@ If not set, it will default to the JAVA_HOME environment variable.
 Set this value to the directory of your PDI install.
 !| set kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
 
-You can check any of the values as well.
-This first one should fail.
-!| check | log level | NonExistingLogLevel |
-| check | log level | Minimal |
+You can '''check''' any of the values as well.
+!| check | log level | Minimal |
 | check | kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
+
+You can examine the standard output from pan and kitchen by setting the read output value to true (default).
+Note, output will be available after tests finish running. Just click on the link at the top of the page that says ''Output Captured''.
+!| set read output | false |
+| check | read output | false |
+
+Either change this to false or comment it out to suppress capture of standard output.
+!| set read output | true |
+| check | read output | true |
+
+!3 Running Transformations
 
 Typically it is a good idea to create individual test tables for each PDI invokation.
 Otherwise you will not see any results until all the transformations/jobs in the table have finished.
@@ -101,6 +121,8 @@ It also displays a description of the exit value number.
 !| reject | run transformation | pass-or-fail | with | PASS=false |
 | show | exit value |
 
+!3 Running Jobs
+
 Now let's run some jobs.
 Test '''run'''ning '''job'''s '''at''' a specified directory.
 !| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
@@ -126,3 +148,9 @@ Test exit value display.
 
 !| reject | run job | pass-or-fail-job | with | PASS=false |
 | show | exit value |
+
+!3 Wrapping up
+
+One important thing to remember is that !-EtlFit-! is only intended to facilitate the ''execution'' of your ETL code.
+When a test table to run a transformation or job passes, it only means that pan or kitchen completed without error. It does not imply that your ETL works correctly. 
+You will need to use other Fixtures like [[!-DbFit-!][http://benilovj.github.io/dbfit/]] to test the results of your ETL code.

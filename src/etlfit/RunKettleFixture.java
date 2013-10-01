@@ -17,6 +17,7 @@ public class RunKettleFixture extends DoFixture {
 	private String javaHome = System.getenv("JAVA_HOME");
 	private String kettleHome = "";
 	private int exitValue;
+	private static boolean readOutput = true;
 
 	private int runProcess(ProcessBuilder pb) {
 		int ev;
@@ -35,7 +36,9 @@ public class RunKettleFixture extends DoFixture {
 			BufferedReader br = new BufferedReader(isr);
 			String line;
 			while ((line = br.readLine()) != null) {
-				System.out.println(line);
+				if (readOutput) {
+					System.out.println(line);
+				}
 			}
 
 			ev = process.exitValue();
@@ -141,6 +144,16 @@ public class RunKettleFixture extends DoFixture {
 			workDirectory = System.getProperty("user.home") + File.separator;
 		} else {
 			workDirectory = dir;
+		}
+	}
+
+	public void setReadOutput(String out) {
+		if (out.equalsIgnoreCase("true")) {
+			readOutput = true;
+		} else if (out.equalsIgnoreCase("false")) {
+			readOutput = false;
+		} else {
+			// Do nothing
 		}
 	}
 
