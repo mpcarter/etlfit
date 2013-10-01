@@ -8,7 +8,7 @@ import java.util.*;
 public class RunKettleFixture extends DoFixture {
 	private static String osName = System.getProperty("os.name").toLowerCase();
 	private String logLevel = "Minimal";
-	private String logDirectory = System.getProperty("java.io.tmpdir");
+	private String logDirectory = System.getProperty("java.io.tmpdir") + ((System.getProperty("java.io.tmpdir").endsWith(File.separator)) ? "" : File.separator);
 	private String kettleDirectory = (isWindows()) ? "C:\\pentaho\\data-integration\\" : "/opt/pentaho/data-integration/";
 	private String trnExecutor = (isWindows()) ? "Pan.bat" : "pan.sh";
 	private String jobExecutor = (isWindows()) ? "Kitchen.bat" : "kitchen.sh";
@@ -30,7 +30,6 @@ public class RunKettleFixture extends DoFixture {
 				env.put("KETTLE_HOME", kettleHome);
 			}
 			Process process = pb.start();
-			//ev = process.waitFor();
 			InputStream is = process.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
@@ -41,12 +40,19 @@ public class RunKettleFixture extends DoFixture {
 				}
 			}
 
-			ev = process.exitValue();
+			if (isWindows()) {
+				// Apparently Windows does not like waitFor...
+				ev = process.exitValue();
+			} else {
+				// and Linux does not like exitValue.
+				// Why can't we all get along?
+				ev = process.waitFor();
+			}
 
 		} catch (IOException ioex) {
 			ev = 1;
-		//} catch (InterruptedException iex) {
-	//		ev = 1;
+		} catch (InterruptedException iex) {
+			ev = 1;
 		}
 		return ev;
 	}

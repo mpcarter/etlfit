@@ -1,6 +1,6 @@
 !path lib/*.jar
 
-This page is intended to demonstrate the features of [[!-EtlFit's-!][<EtlFit]] Run Kettle Fixture.
+This page is intended to demonstrate the features of [[!-EtlFit's-!][.EtlFit]] Run Kettle Fixture.
 
 This is needed to invoke the fixture.
 !|etlfit.RunKettleFixture|
@@ -24,18 +24,18 @@ You are not required to show these. It is just here for reference. Many of them 
 
 You may need to alter some of them slightly for this page to run without error.
 For example, you need to change references to <user> to whatever your home directory is called.
-The paths on this page assume you are using !-GitHub-! on Windows. If you are running Linux check out [[!-RunKettleLinuxTest-!][.EtlFit.RunKettleLinuxTest]] page.
+The paths on this page assume you are using Linux. If you are running Windows check out [[!-RunKettleTest-!][.EtlFit.RunKettleTest]] page
 
 Set this value to your java install. This value is passed to the PENTAHO_JAVA_HOME environment variable.
 If not set, it will default to the JAVA_HOME environment variable.
-!| set java home | C:\Program Files\Java\jdk1.6.0_41 |
+!| set java home | /opt/jdk1.6 |
 
 Set this value to the directory of your PDI install.
-!| set kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
+!| set kettle directory | /opt/pentaho/data-integration/ |
 
 You can '''check''' any of the values as well.
 !| check | log level | Minimal |
-| check | kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
+| check | kettle directory | /opt/pentaho/data-integration/ |
 
 You can examine the standard output from pan and kitchen by setting the read output value to true (default).
 Note, output will be available after tests finish running. Just click on the link at the top of the page that says ''Output Captured''.
@@ -52,16 +52,16 @@ Typically it is a good idea to create individual test tables for each PDI invoka
 Otherwise you will not see any results until all the transformations/jobs in the table have finished.
 
 Test '''run'''ning '''transformation'''s '''at''' a specified directory.
-!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
+!| run transformation | hello-world | at | /home/<user>/etlfit/test/ |
 
 You can also use relative paths.
 The relative paths are based on the working directory, which defaults to the user's home directory.
-!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ |
+!| run transformation | hello-world | at | etlfit/test/ |
 
 You can change the working directory, just remember this will change how relative paths work.
-!| set work directory | C:\Users\<user>\Desktop\GitHub\etlfit\ |
+!| set work directory | /home/<user>/etlfit/ |
 
-!| run transformation | hello-world | at | test\ |
+!| run transformation | hello-world | at | test/ |
 
 '''default''' will reset the working directory.
 !| set work directory | default |
@@ -69,22 +69,22 @@ You can change the working directory, just remember this will change how relativ
 
 Now run the transformation '''with''' named parameters. 
 Parameter list should be in the format key1=value1,key2=value2,... 
-!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+!| run transformation | hello-world | at | etlfit/test/ | with | PARAM_ONE=foo |
 
-!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
+!| run transformation | hello-world | at | etlfit/test/ | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
 You can set the default directory of your transformations/jobs, and then drop the '''at''' value.
 This can help avoid errors when you are running lots of transformations/jobs at the same location,
 and it makes your tests look cleaner too.
 
 Set this value to the test directory of your etlfit git repo.
-!| set etl directory | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
+!| set etl directory | /home/<user>/etlfit/test/ |
 
 Test transformation with predefined directory.
 !| run transformation | hello-world |
 
 You can set the ETL directory to a relative path as well.
-!| set etl directory | Desktop\GitHub\etlfit\test\ |
+!| set etl directory | etlfit/test/ |
 
 !| run transformation | hello-world |
 
@@ -94,7 +94,7 @@ Test transformation with predefined directory and 1 or more parameters.
 !| run transformation | hello-world | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
 You can still use the '''at''' form. It will just ignore the ETL directory value.
-!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ |
+!| run transformation | hello-world | at | etlfit/test/ |
 
 Test for bad transformation name.
 !| reject | run transformation | hello-word |
@@ -102,7 +102,7 @@ Test for bad transformation name.
 Change KETTLE_HOME
 Useful if you need to set a specific configuration or Kettle environment variables when you run PDI.
 Note, you cannot use relative paths.
-!| set kettle home | C:\Users\<user>\Desktop\GitHub\etlfit\test |
+!| set kettle home | /home/<user>/etlfit/test |
 | show | kettle home |
 
 !| run transformation | hello-world |
@@ -125,15 +125,15 @@ It also displays a description of the exit value number.
 
 Now let's run some jobs.
 Test '''run'''ning '''job'''s '''at''' a specified directory.
-!| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
+!| run job | hello-world-job | at | /home/<user>/etlfit/test/ |
 
 With a relative path.
-!| run job | hello-world-job | at | Desktop\GitHub\etlfit\test\ |
+!| run job | hello-world-job | at | etlfit/test/ |
 
 Now run the job '''with''' named parameters. 
-!| run job | hello-world-job | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+!| run job | hello-world-job | at | etlfit/test/ | with | PARAM_ONE=foo |
 
-!| run job | hello-world-job | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
+!| run job | hello-world-job | at | etlfit/test/ | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
 Test job with predefined directory and 0 or more parameters.
 !| run job | hello-world-job |
