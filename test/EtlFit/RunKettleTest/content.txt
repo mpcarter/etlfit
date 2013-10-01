@@ -81,3 +81,26 @@ Test exit value display.
 !| run transformation | pass-or-fail | with | PASS=false |
 | show | exit value |
 
+Now let's do the same thing but with jobs.
+Test '''run'''ning job '''at''' a specified directory.
+!| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
+
+Now run the job '''with''' named parameters. 
+!| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+
+!| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
+
+Test job with predefined directory and 0 or more parameters.
+!| run job | hello-world-job |
+
+!| run job | hello-world-job | with | PARAM_ONE=foo |
+
+!| run job | hello-world-job | with | PARAM_ONE=foo,PARAM_TWO=bar |
+
+Test exit value display.
+!| run job | pass-or-fail-job | with | PASS=true |
+| show | exit value |
+
+!| run job | pass-or-fail-job | with | PASS=false |
+| show | exit value |
+

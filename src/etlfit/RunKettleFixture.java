@@ -81,6 +81,36 @@ public class RunKettleFixture extends DoFixture {
 		return runTransformationAt(trnName, etlDirectory);
 	}
 
+	public boolean runJobAtWith(String jobName, String jobPath, String[] jobParamArray) {
+		List<String> commands = new ArrayList<String>();
+		commands.add(kettleDirectory + jobExecutor);
+		commands.add("/file:" + jobPath + jobName + ".kjb"); 
+		for (String param : jobParamArray) {
+			commands.add("/param:" + param);	
+		}
+		commands.add("/level:" + logLevel); 
+		commands.add("/log:" + logDirectory + jobName + ".log");
+		
+		ProcessBuilder pb = new ProcessBuilder(commands);
+		exitValue = runProcess(pb);
+
+		return exitValue == 0;
+	}
+
+	public boolean runJobWith(String jobName, String[] jobParamArray) {
+		return runJobAtWith(jobName, etlDirectory, jobParamArray);
+	}
+
+	public boolean runJobAt(String jobName, String jobPath) {
+		String[] jobParamArray;
+		jobParamArray = new String[0];
+		return runJobAtWith(jobName, jobPath, jobParamArray);
+	}
+
+	public boolean runJob(String jobName) {
+		return runJobAt(jobName, etlDirectory);
+	}
+
 	public void setLogLevel(String level) {
 		logLevel = level;
 	}
