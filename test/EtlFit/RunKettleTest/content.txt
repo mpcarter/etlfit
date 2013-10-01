@@ -10,6 +10,7 @@ List default values
 | show | kettle directory |
 | show | trn executor |
 | show | job executor |
+| show | work directory |
 | show | etl directory |
 | show | java home |
 | show | kettle home |
@@ -27,19 +28,30 @@ This first one should fail.
 | check | log level | Minimal |
 | check | kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
 
-
 Typically it is a good idea to create individual test tables for each PDI invokation.
 Otherwise you will not see any results until all the transformations/jobs in the table have finished.
 
-Test '''run'''ning transformation '''at''' a specified directory.
+Test '''run'''ning '''transformation'''s '''at''' a specified directory.
 !| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
 
-Now run the transformation '''with''' named parameters. 
-Parameter list should be in the format KEY1=value1,KEY2=value2,... 
-Note, the upper case is not required just a convention.
-!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+You can also use relative paths.
+The relative paths are based on the working directory, which defaults to the user's home directory.
+!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ |
 
-!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
+You can change the working directory, just remember this will change how relative paths work.
+!| set work directory | C:\Users\<user>\Desktop\GitHub\etlfit\ |
+
+!| run transformation | hello-world | at | test\ |
+
+'''default''' will reset the working directory.
+!| set work directory | default |
+| show | work directory |
+
+Now run the transformation '''with''' named parameters. 
+Parameter list should be in the format key1=value1,key2=value2,... 
+!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+
+!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
 You can set the default directory of your transformations/jobs, and then drop the '''at''' value.
 This can help avoid errors when you are running lots of transformations/jobs at the same location,
@@ -48,47 +60,58 @@ and it makes your tests look cleaner too.
 Set this value to the test directory of your etlfit git repo.
 !| set etl directory | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
 
-Test transformation with predefined directory and 0 or more parameters.
+Test transformation with predefined directory.
 !| run transformation | hello-world |
 
+You can set the ETL directory to a relative path as well.
+!| set etl directory | Desktop\GitHub\etlfit\test\ |
+
+!| run transformation | hello-world |
+
+Test transformation with predefined directory and 1 or more parameters.
 !| run transformation | hello-world | with | PARAM_ONE=foo |
 
 !| run transformation | hello-world | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
 You can still use the '''at''' form. It will just ignore the ETL directory value.
-!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
+!| run transformation | hello-world | at | Desktop\GitHub\etlfit\test\ |
 
 Test for bad transformation name.
 !| reject | run transformation | hello-word |
 
 Change KETTLE_HOME
 Useful if you need to set a specific configuration or Kettle environment variables when you run PDI.
+Note, you cannot use relative paths.
 !| set kettle home | C:\Users\<user>\Desktop\GitHub\etlfit\test |
 | show | kettle home |
 
 !| run transformation | hello-world |
 
-Test exit value display.
+You can display exit values from the most recent transformation/job.
+It also displays a description of the exit value number.
 !| run transformation | hello-world |
 | show | exit value |
 
-!| run transformation | hello-word |
+!| reject | run transformation | hello-word |
 | show | exit value |
 
 !| run transformation | pass-or-fail | with | PASS=true |
 | show | exit value |
 
-!| run transformation | pass-or-fail | with | PASS=false |
+!| reject | run transformation | pass-or-fail | with | PASS=false |
 | show | exit value |
 
-Now let's do the same thing but with jobs.
-Test '''run'''ning job '''at''' a specified directory.
+Now let's run some jobs.
+Test '''run'''ning '''job'''s '''at''' a specified directory.
 !| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
 
-Now run the job '''with''' named parameters. 
-!| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+With a relative path.
+!| run job | hello-world-job | at | Desktop\GitHub\etlfit\test\ |
 
-!| run job | hello-world-job | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
+Now run the job '''with''' named parameters. 
+!| run job | hello-world-job | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
+
+!| run job | hello-world-job | at | Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
 Test job with predefined directory and 0 or more parameters.
 !| run job | hello-world-job |
@@ -101,6 +124,5 @@ Test exit value display.
 !| run job | pass-or-fail-job | with | PASS=true |
 | show | exit value |
 
-!| run job | pass-or-fail-job | with | PASS=false |
+!| reject | run job | pass-or-fail-job | with | PASS=false |
 | show | exit value |
-
