@@ -1,5 +1,5 @@
-EtlFit is a simple fixture extension of FitNesse  
-designed to enable the execution of non-database residing  
+EtlFit is a simple fixture extension of FitNesse 
+designed to enable the execution of non-database residing 
 ETL tools.
 
 Currently it only supports Pentaho Data Integration aka Kettle.
