@@ -6,25 +6,49 @@ import java.io.*;
 import java.util.*;
 
 public class RunKettleFixture extends DoFixture {
-	private String logLevel = "Basic";
-	private String logDirectory = "/tmp/";
-	private String kettleDirectory = "/opt/pentaho/data-integration/";
-	private String trnExecutor = "pan.sh";
-	private String jobExecutor = "kitchen.sh";
-	private String etlDirectory = "~/";
+	private static String osName = System.getProperty("os.name").toLowerCase();
+	private String logLevel = "Minimal";
+	private String logDirectory = System.getProperty("java.io.tmpdir");
+	//private String logDirectory = "C:\\Users\\mcarter\\"; //System.getProperty("java.io.tmpdir");
+	private String kettleDirectory = (isWindows()) ? "C:\\pentaho\\data-integration\\" : "/opt/pentaho/data-integration/";
+	private String trnExecutor = (isWindows()) ? "Pan.bat" : "pan.sh";
+	private String jobExecutor = (isWindows()) ? "Kitchen.bat" : "kitchen.sh";
+	private String etlDirectory = System.getProperty("user.home") + File.separator;
+	private String javaHome = System.getenv("JAVA_HOME");
+	private String kettleHome = "";
 	private int exitValue;
 
 	private int runProcess(ProcessBuilder pb) {
 		int ev;
 		try {
+			pb.redirectErrorStream(true);
+			Map<String, String> env = pb.environment();
+			env.put("PENTAHO_JAVA_HOME", javaHome);
+			if (kettleHome != "") {
+				env.put("KETTLE_HOME", kettleHome);
+			}
 			Process process = pb.start();
-			ev = process.waitFor();
+			//ev = process.waitFor();
+			InputStream is = process.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line;
+			while ((line = br.readLine()) != null) {
+				System.out.println(line);
+			}
+
+			ev = process.exitValue();
+
 		} catch (IOException ioex) {
 			ev = 1;
-		} catch (InterruptedException iex) {
-			ev = 1;
+		//} catch (InterruptedException iex) {
+	//		ev = 1;
 		}
 		return ev;
+	}
+
+	private boolean isWindows() {
+		return (osName.indexOf("win") >= 0);
 	}
 
 	public boolean runTransformationAtWith(String trnName, String trnPath, String[] trnParamArray) {
@@ -50,8 +74,9 @@ public class RunKettleFixture extends DoFixture {
 	public boolean runTransformationAt(String trnName, String trnPath) {
 		ProcessBuilder pb = new ProcessBuilder(kettleDirectory + trnExecutor, 
 				"/file:" + trnPath + trnName + ".ktr", 
-				"/level:" + logLevel, 
-				"/log:" + logDirectory + trnName + ".log");
+				"/level:" + logLevel , 
+				"/log:" + logDirectory + trnName + ".log"
+				);
 		exitValue = runProcess(pb);
 
 		return exitValue == 0;
@@ -76,6 +101,14 @@ public class RunKettleFixture extends DoFixture {
 	public void setKettleDirectory(String dir) {
 		kettleDirectory = dir;
 	}
+	
+	public void setJavaHome(String dir) {
+		javaHome = dir;
+	}
+
+	public void setKettleHome(String dir) {
+		kettleHome = dir;
+	}
 
 	public String getExitValue() {
 		String exitMessage;
@@ -99,5 +132,6 @@ public class RunKettleFixture extends DoFixture {
 		}
 		return Integer.toString(exitValue) + ": " + exitMessage;
 	}
+
 }
 

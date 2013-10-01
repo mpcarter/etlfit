@@ -1,41 +1,83 @@
 !path lib/*.jar
 
+This is needed to invoke the fixture.
 !|etlfit.RunKettleFixture|
 
-#|show|log level|
-#|show|log directory|
-#|show|kettle directory|
-|set etl directory|/home/pentaho/|
-#|show|etl directory|
+List default values
+!| show | os name |
+| show | log level |
+| show | log directory |
+| show | kettle directory |
+| show | trn executor |
+| show | job executor |
+| show | etl directory |
+| show | java home |
+| show | kettle home |
 
-| run transformation | hello-world |
+Set this value to your java install. This value is passed to the PENTAHO_JAVA_HOME environment variable.
+If not set, it will default to the JAVA_HOME environment variable.
+!| set java home | C:\Program Files\Java\jdk1.6.0_41 |
+
+Set this value to the directory of your PDI install.
+!| set kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
+
+You can check any of the values as well.
+This first one should fail.
+!| check | log level | NonExistingLogLevel |
+| check | log level | Minimal |
+| check | kettle directory | C:\pentaho\pentaho-ce\design-tools\data-integration\ |
 
 
-#|set log level|Minimal|
-#|set etl directory|/some/bogus/directory/|
+Typically it is a good idea to create individual test tables for each PDI invokation.
+Otherwise you will not see any results until all the transformations/jobs in the table have finished.
 
-#|show|etl directory|
-#|check|log level|Minimal|
+Test '''run'''ning transformation '''at''' a specified directory.
+!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
 
-#|run transformation|test-fixture|at|/home/pentaho/|
-#|show|exit value|
+Now run the transformation '''with''' named parameters. 
+Parameter list should be in the format KEY1=value1,KEY2=value2,... 
+Note, the upper case is not required just a convention.
+!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo |
 
-#|run transformation|test-fixture|at|/home/pentaho/|with|P_PARAM_A=BOO!|
+!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
-#|run transformation|test-fixture|at|/home/pentaho/|with|P_PARAM_B=whoa|
+You can set the default directory of your transformations/jobs, and then drop the '''at''' value.
+This can help avoid errors when you are running lots of transformations/jobs at the same location,
+and it makes your tests look cleaner too.
 
-#|run transformation|test-fixture|at|/home/pentaho/|with|P_PARAM_A=aye,P_PARAM_B=carumba|
+Set this value to the test directory of your etlfit git repo.
+!| set etl directory | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
 
-#|set etl directory|/home/pentaho/|
+Test transformation with predefined directory and 0 or more parameters.
+!| run transformation | hello-world |
 
-#|show|etl directory|
+!| run transformation | hello-world | with | PARAM_ONE=foo |
 
-#|run transformation|test-fixture|
-#|show|exit value|
+!| run transformation | hello-world | with | PARAM_ONE=foo,PARAM_TWO=bar |
 
-#|run transformation|test-fixture|with|P_PARAM_A=The-cake|
+You can still use the '''at''' form. It will just ignore the ETL directory value.
+!| run transformation | hello-world | at | C:\Users\<user>\Desktop\GitHub\etlfit\test\ |
 
-#|run transformation|test-fixture|with|P_PARAM_B=is-a-lie|
+Test for bad transformation name.
+!| reject | run transformation | hello-word |
 
-#|run transformation|test-fixture|with|P_PARAM_B=The-cake,P_PARAM_A=is-a-lie|
+Change KETTLE_HOME
+Useful if you need to set a specific configuration or Kettle environment variables when you run PDI.
+!| set kettle home | C:\Users\<user>\Desktop\GitHub\etlfit\test |
+| show | kettle home |
+
+!| run transformation | hello-world |
+
+Test exit value display.
+!| run transformation | hello-world |
+| show | exit value |
+
+!| run transformation | hello-word |
+| show | exit value |
+
+!| run transformation | pass-or-fail | with | PASS=true |
+| show | exit value |
+
+!| run transformation | pass-or-fail | with | PASS=false |
+| show | exit value |
 
