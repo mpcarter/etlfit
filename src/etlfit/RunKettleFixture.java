@@ -72,14 +72,9 @@ public class RunKettleFixture extends DoFixture {
 	}
 
 	public boolean runTransformationAt(String trnName, String trnPath) {
-		ProcessBuilder pb = new ProcessBuilder(kettleDirectory + trnExecutor, 
-				"/file:" + trnPath + trnName + ".ktr", 
-				"/level:" + logLevel , 
-				"/log:" + logDirectory + trnName + ".log"
-				);
-		exitValue = runProcess(pb);
-
-		return exitValue == 0;
+		String[] trnParamArray;
+		trnParamArray = new String[0];
+		return runTransformationAtWith(trnName, trnPath, trnParamArray);
 	}
 
 	public boolean runTransformation(String trnName) {
