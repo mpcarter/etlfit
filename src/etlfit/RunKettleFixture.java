@@ -7,15 +7,15 @@ import java.util.*;
 
 public class RunKettleFixture extends DoFixture {
 	private static String osName = System.getProperty("os.name").toLowerCase();
-	private String logLevel = "Minimal";
-	private String logDirectory = System.getProperty("java.io.tmpdir") + ((System.getProperty("java.io.tmpdir").endsWith(File.separator)) ? "" : File.separator);
-	private String kettleDirectory = (isWindows()) ? "C:\\pentaho\\data-integration\\" : "/opt/pentaho/data-integration/";
-	private String trnExecutor = (isWindows()) ? "Pan.bat" : "pan.sh";
-	private String jobExecutor = (isWindows()) ? "Kitchen.bat" : "kitchen.sh";
-	private String workDirectory = System.getProperty("user.home") + File.separator;
-	private String etlDirectory = System.getProperty("user.home") + File.separator;
-	private String javaHome = System.getenv("JAVA_HOME");
-	private String kettleHome = "";
+	private static String logLevel = "Minimal";
+	private static String logDirectory = System.getProperty("java.io.tmpdir") + ((System.getProperty("java.io.tmpdir").endsWith(File.separator)) ? "" : File.separator);
+	private static String kettleDirectory = (isWindows()) ? "C:\\pentaho\\data-integration\\" : "/opt/pentaho/data-integration/";
+	private static String trnExecutor = (isWindows()) ? "Pan.bat" : "pan.sh";
+	private static String jobExecutor = (isWindows()) ? "Kitchen.bat" : "kitchen.sh";
+	private static String workDirectory = System.getProperty("user.home") + File.separator;
+	private static String etlDirectory = System.getProperty("user.home") + File.separator;
+	private static String javaHome = System.getenv("JAVA_HOME");
+	private static String kettleHome = "";
 	private int exitValue;
 	private static boolean readOutput = true;
 
@@ -57,7 +57,7 @@ public class RunKettleFixture extends DoFixture {
 		return ev;
 	}
 
-	private boolean isWindows() {
+	private static boolean isWindows() {
 		return (osName.indexOf("win") >= 0);
 	}
 
