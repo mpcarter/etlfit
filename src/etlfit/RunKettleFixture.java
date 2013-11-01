@@ -66,6 +66,7 @@ public class RunKettleFixture extends DoFixture {
 		commands.add(kettleDirectory + trnExecutor);
 		commands.add("/file:" + trnPath + trnName + ".ktr"); 
 		for (String param : trnParamArray) {
+			param = param.replaceAll("(?<!\\\\);",",").replaceAll("\\\\;",";");
 			commands.add("/param:" + param);	
 		}
 		commands.add("/level:" + logLevel); 
@@ -96,6 +97,7 @@ public class RunKettleFixture extends DoFixture {
 		commands.add(kettleDirectory + jobExecutor);
 		commands.add("/file:" + jobPath + jobName + ".kjb"); 
 		for (String param : jobParamArray) {
+			param = param.replaceAll("(?<!\\\\);",",").replaceAll("\\\\;",";");
 			commands.add("/param:" + param);	
 		}
 		commands.add("/level:" + logLevel); 
