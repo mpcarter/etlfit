@@ -3,7 +3,13 @@ designed to enable the execution of non-database residing
 ETL tools.
 
 Currently it only supports Pentaho Data Integration aka Kettle.
- 
+
+### Install ###
+
+1. Download the latest release.
+2. Extract the etlfit.jar file
+3. Copy etlfit.jar to lib/ of your DbFit installation
+
 ### How to Build ###
 
 It's pretty simple really. Just clone this repo and run the build.bat or build.sh script.  
