@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repositories>
+  <repository>    <id>KettleFileRepository</id>
+    <name>test</name>
+    <description>test</description>
+    <base_directory>C&#x3a;&#x5c;Users&#x5c;mcarter&#x5c;Desktop&#x5c;GitHub&#x5c;etlfit&#x5c;test</base_directory>
+    <read_only>N</read_only>
+    <hides_hidden_files>N</hides_hidden_files>
+  </repository>  </repositories>

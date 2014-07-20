@@ -10,6 +10,7 @@ public class RunKettleFixture extends DoFixture {
 	private static String logLevel = "Minimal";
 	private static String logDirectory = System.getProperty("java.io.tmpdir") + ((System.getProperty("java.io.tmpdir").endsWith(File.separator)) ? "" : File.separator);
 	private static String kettleDirectory = (isWindows()) ? "C:\\pentaho\\data-integration\\" : "/opt/pentaho/data-integration/";
+	private static String kettleRepository = "";
 	private static String trnExecutor = (isWindows()) ? "Pan.bat" : "pan.sh";
 	private static String jobExecutor = (isWindows()) ? "Kitchen.bat" : "kitchen.sh";
 	private static String workDirectory = System.getProperty("user.home") + File.separator;
@@ -64,7 +65,13 @@ public class RunKettleFixture extends DoFixture {
 	public boolean runTransformationAtWith(String trnName, String trnPath, String[] trnParamArray) {
 		List<String> commands = new ArrayList<String>();
 		commands.add(kettleDirectory + trnExecutor);
-		commands.add("/file:" + trnPath + trnName + ".ktr"); 
+		if (kettleRepository.isEmpty()) {
+			commands.add("/file:" + trnPath + trnName + ".ktr"); 
+		} else {
+			commands.add("/rep:" + kettleRepository);
+			commands.add("/dir:" + trnPath);
+			commands.add("/trans:" + trnName);
+		}
 		for (String param : trnParamArray) {
 			param = param.replaceAll("(?<!\\\\);",",").replaceAll("\\\\;",";");
 			commands.add("/param:" + param);	
@@ -95,7 +102,13 @@ public class RunKettleFixture extends DoFixture {
 	public boolean runJobAtWith(String jobName, String jobPath, String[] jobParamArray) {
 		List<String> commands = new ArrayList<String>();
 		commands.add(kettleDirectory + jobExecutor);
-		commands.add("/file:" + jobPath + jobName + ".kjb"); 
+		if (kettleRepository.isEmpty()) {
+			commands.add("/file:" + jobPath + jobName + ".kjb"); 
+		} else {
+			commands.add("/rep:" + kettleRepository);
+			commands.add("/dir:" + jobPath);
+			commands.add("/job:" + jobName);
+		}
 		for (String param : jobParamArray) {
 			param = param.replaceAll("(?<!\\\\);",",").replaceAll("\\\\;",";");
 			commands.add("/param:" + param);	
@@ -137,6 +150,10 @@ public class RunKettleFixture extends DoFixture {
 	
 	public void setKettleDirectory(String dir) {
 		kettleDirectory = dir;
+	}
+	
+	public void setKettleRepository(String repo) {
+		kettleRepository = repo;
 	}
 	
 	public void setJavaHome(String dir) {
